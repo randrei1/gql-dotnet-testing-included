@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GraphQL;
+using GraphQL.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MyFancyApi.Service.GraphQL;
 
 namespace MyFancyApi.Service
 {
@@ -26,6 +29,16 @@ namespace MyFancyApi.Service
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddScoped<IDependencyResolver>(x => 
+                new FuncDependencyResolver(x.GetRequiredService));
+
+            services.AddTransient<MyFancySchema>();
+
+            services.AddGraphQL(x =>
+            {
+                x.ExposeExceptions = true;
+            })
+            .AddGraphTypes(ServiceLifetime.Transient);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +56,8 @@ namespace MyFancyApi.Service
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            app.UseGraphQL<MyFancySchema>();
         }
     }
 }
