@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -57,6 +58,10 @@ namespace MyFancyApi.Service
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            var option = new RewriteOptions();
+            option.AddRedirect("^$", "ui/playground");
+            app.UseRewriter(option);
 
             app.UseGraphQL<MyFancySchema>();
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
