@@ -22,6 +22,20 @@ namespace MyFancyApi.Service.GraphQL
                 Name = "authors",
                 resolve: async context => await authorService.GetAuthors()
             );
+
+            FieldAsync<AuthorType>(
+                Name = "author",
+                arguments: new QueryArguments(
+                    new QueryArgument<IntGraphType>
+                    {
+                        Name = "id"
+                    }),
+                resolve: async context =>
+                {
+                    var id = context.GetArgument<int>("id");
+                    return await authorService.GetAuthor(id);
+                }
+            ); ;
         }
     }
 }
