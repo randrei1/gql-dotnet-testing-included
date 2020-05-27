@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyFancyApi.Service.GraphQL;
+using MyFancyApi.Service.Services;
 
 namespace MyFancyApi.Service
 {
@@ -35,6 +36,7 @@ namespace MyFancyApi.Service
                 new FuncDependencyResolver(x.GetRequiredService));
 
             services.AddTransient<MyFancySchema>();
+            services.AddTransient<IAuthorService, AuthorService>();
 
             services.AddGraphQL(x =>
             {
