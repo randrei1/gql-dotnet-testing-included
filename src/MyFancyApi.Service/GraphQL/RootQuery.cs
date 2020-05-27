@@ -11,7 +11,7 @@ namespace MyFancyApi.Service.GraphQL
 {
     public class RootQuery : ObjectGraphType
     {
-        public RootQuery(IAuthorService authorService)
+        public RootQuery(IAuthorService authorService, IBookService bookService)
         {
             Field<StringGraphType>(
                 Name = "ping",
@@ -35,7 +35,26 @@ namespace MyFancyApi.Service.GraphQL
                     var id = context.GetArgument<int>("id");
                     return await authorService.GetAuthor(id);
                 }
-            ); ;
+            );
+
+            FieldAsync<ListGraphType<AuthorType>>(
+                Name = "books",
+                resolve: async context => await bookService.GetBooks()
+            );
+
+            FieldAsync<BookType>(
+                Name = "book",
+                arguments: new QueryArguments(
+                    new QueryArgument<IntGraphType>
+                    {
+                        Name = "id"
+                    }),
+                resolve: async context =>
+                {
+                    var id = context.GetArgument<int>("id");
+                    return await bookService.GetBook(id);
+                }
+            );
         }
     }
 }

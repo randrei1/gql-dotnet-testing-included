@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyFancyApi.Service.GraphQL;
+using MyFancyApi.Service.Models;
 using MyFancyApi.Service.Services;
 
 namespace MyFancyApi.Service
@@ -37,6 +38,7 @@ namespace MyFancyApi.Service
 
             services.AddTransient<MyFancySchema>();
             services.AddTransient<IAuthorService, AuthorService>();
+            services.AddTransient<IBookService, BookService>();
 
             services.AddGraphQL(x =>
             {
