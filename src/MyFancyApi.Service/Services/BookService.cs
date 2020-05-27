@@ -11,6 +11,7 @@ namespace MyFancyApi.Service.Services
     {
         Task<List<Book>> GetBooks();
         Task<Book> GetBook(int id);
+        Task<List<Book>> GetBooksForAuthor(int authorId);
     }
     public class BookService : IBookService
     {
@@ -28,6 +29,11 @@ namespace MyFancyApi.Service.Services
         public async Task<List<Book>> GetBooks()
         {
             return await _libContext.Books.ToListAsync();
+        }
+
+        public async Task<List<Book>> GetBooksForAuthor(int authorId)
+        {
+            return await _libContext.Books.Where(b => b.AuthorId == authorId).ToListAsync();
         }
     }
 }
